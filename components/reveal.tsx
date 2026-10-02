@@ -1,34 +1,38 @@
 "use client";
 
-import { motion, useReducedMotion } from "motion/react";
-import type { ReactNode } from "react";
+import { useEffect, useRef } from "react";
 
-/**
- * Fade-and-rise on entering the viewport. Collapses to a plain render when the
- * visitor asks for reduced motion — Figma Motion Spec row 24.
- */
-export function Reveal({
+/** Adds `in` when the element scrolls into view (Figma Timeline/tile reveal). */
+export default function Reveal({
   children,
+  className = "",
   delay = 0,
-  className,
 }: {
-  children: ReactNode;
-  delay?: number;
+  children: React.ReactNode;
   className?: string;
+  delay?: number;
 }) {
-  const reduced = useReducedMotion();
+  const ref = useRef<HTMLDivElement>(null);
 
-  if (reduced) return <div className={className}>{children}</div>;
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry.isIntersecting) return;
+        el.style.transitionDelay = `${delay}ms`;
+        el.classList.add("in");
+        observer.disconnect();
+      },
+      { rootMargin: "0px 0px -15% 0px" },
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [delay]);
 
   return (
-    <motion.div
-      className={className}
-      initial={{ opacity: 0, y: 24 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-80px" }}
-      transition={{ duration: 0.6, delay, ease: [0.22, 1, 0.36, 1] }}
-    >
+    <div ref={ref} className={`reveal ${className}`}>
       {children}
-    </motion.div>
+    </div>
   );
 }

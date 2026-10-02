@@ -1,200 +1,374 @@
-import type { StaticImageData } from "next/image";
+/**
+ * All copy + data for the site, transcribed from the Figma file "Portofolio"
+ * (Vfa2sw0KvmhagP7jjrZBJ6). Frame ids are noted so a design change maps to one
+ * place here.
+ */
 
-// Every fact here traces back to the CV (docs/PRD.md §12). No invented awards,
-// metrics, or stacks — see docs/design-audit.md finding "award & angka fiktif".
+export const profile = {
+  wordmark: "PRANA",
+  headline: "prana", // Home hero (14:15)
+  intro:
+    "I turn messy data into useful products — building machine learning models, data pipelines, and web experiences that are accurate, fast, and make a measurable impact.",
+  email: "hello@prana.dev",
+  location: "Bali, Indonesia — WITA (UTC+8)",
+  locationShort: "Bali, Indonesia",
+  socialLine: "LinkedIn · GitHub · Threads",
+  resumeUrl: "https://drive.google.com/",
+  availability:
+    "Open to full-time roles, internships, and freelance projects in data science, ML, and web. I usually reply within 24 hours.",
+  contactTitle: "Let’s talk", // Contact header (18:213)
+  // About page copy — 4 paragraphs (18:112)
+  paragraphs: [
+    "Hi, I’m Prana — a data scientist and ML engineer helping teams turn raw data into clear decisions and products people actually use.",
+    "I work across the stack: from cleaning messy datasets and training models, to shipping them behind fast, thoughtful web interfaces.",
+    "Whether it’s language models for local languages, forecasting, or IoT sensing, my process is iterative, grounded in evaluation, and built to last.",
+    "I believe good models aren’t just accurate. They’re explainable, reliable, and move people to make better decisions.",
+  ],
+};
+
+export const nav = [
+  { label: "PROJECTS", href: "/projects" },
+  { label: "ABOUT", href: "/about" },
+  { label: "CONTACT", href: "/contact" },
+];
+
+export const footerColumns = [
+  {
+    label: "(Navigate)",
+    links: [
+      { text: "Home", href: "/" },
+      { text: "Projects", href: "/projects" },
+      { text: "About", href: "/about" },
+      { text: "Contact", href: "/contact" },
+    ],
+  },
+  {
+    label: "(Social)",
+    links: [
+      { text: "LinkedIn", href: "https://www.linkedin.com/in/mdprana" },
+      { text: "GitHub", href: "https://github.com/mdprana" },
+      { text: "Threads", href: "https://www.threads.net/@mdprana" },
+      { text: "Instagram", href: "https://www.instagram.com/" },
+    ],
+  },
+  {
+    label: "(Contact)",
+    links: [
+      { text: profile.email, href: `mailto:${profile.email}` },
+      { text: profile.locationShort, href: "" },
+    ],
+  },
+];
+
+export const stats = [
+  { value: "12+", label: "Projects shipped" },
+  { value: "3", label: "Research papers" },
+  { value: "94%", label: "Best model accuracy" },
+  { value: "2K+", label: "Monthly demo users" },
+];
+
+export const awards = [
+  {
+    title: "1st Place — National Data Science Competition",
+    org: "Gemastik",
+    year: "2025",
+  },
+  {
+    title: "Best Paper Award — Low-Resource NLP Workshop",
+    org: "IEEE ICAIIC",
+    year: "2025",
+  },
+  { title: "TensorFlow Developer Certificate", org: "Google", year: "2024" },
+  {
+    title: "Finalist — IoT Innovation Challenge",
+    org: "Bali Tech Week",
+    year: "2024",
+  },
+];
+
+/** Home capability rows (16:12) — label colours alternate white / #5A5A5A. */
+export const capabilities = [
+  { label: "Machine Learning", dim: false },
+  { label: "Data Science & Analytics", dim: true },
+  { label: "NLP & Local Language", dim: false },
+  { label: "IoT Systems", dim: true },
+  { label: "Web Development", dim: false },
+];
+
+export const filters = ["All", "Machine Learning", "Data", "NLP", "IoT", "Web"];
+
+export type Tool = {
+  name: string;
+  category: string;
+  index: string;
+  years: string;
+  logo: string;
+};
+
+/** Tech Stack (32:156) — 12 elements · 5 groups. */
+export const tools: Tool[] = [
+  { name: "Python", category: "(Language)", index: "01", years: "4 yrs", logo: "/logos/python.svg" },
+  { name: "TensorFlow", category: "(ML)", index: "02", years: "3 yrs", logo: "/logos/tensorflow.svg" },
+  { name: "Keras", category: "(ML)", index: "03", years: "3 yrs", logo: "/logos/keras.svg" },
+  { name: "PyTorch", category: "(ML)", index: "04", years: "2 yrs", logo: "/logos/pytorch.svg" },
+  { name: "scikit-learn", category: "(ML)", index: "05", years: "3 yrs", logo: "/logos/scikitlearn.svg" },
+  { name: "Hugging Face", category: "(ML)", index: "06", years: "2 yrs", logo: "/logos/huggingface.svg" },
+  { name: "pandas", category: "(Data)", index: "07", years: "4 yrs", logo: "/logos/pandas.svg" },
+  { name: "NumPy", category: "(Data)", index: "08", years: "4 yrs", logo: "/logos/numpy.svg" },
+  { name: "Jupyter", category: "(Data)", index: "09", years: "4 yrs", logo: "/logos/jupyter.svg" },
+  { name: "OpenCV", category: "(Vision)", index: "10", years: "2 yrs", logo: "/logos/opencv.svg" },
+  { name: "Next.js", category: "(Web)", index: "11", years: "1 yr", logo: "/logos/nextdotjs.svg" },
+  { name: "React", category: "(Web)", index: "12", years: "2 yrs", logo: "/logos/react.svg" },
+];
+
+/** Timeline items (25:222) — About page only. */
+export const timeline = [
+  {
+    period: "2026 — Now",
+    role: "Local Language Specialist Intern",
+    org: "GoTo — Data Science",
+    description:
+      "Building evaluation sets and quality pipelines for regional-language models used across millions of users.",
+  },
+  {
+    period: "2025 — 2026",
+    role: "Machine Learning Research Assistant",
+    org: "Udayana University — AI Lab",
+    description:
+      "Fine-tuned multilingual transformers for Balinese and Javanese text; co-authored a paper on low-resource NLP.",
+  },
+  {
+    period: "2024 — 2025",
+    role: "Freelance Web & IoT Developer",
+    org: "Independent",
+    description:
+      "Shipped dashboards and sensor systems for small businesses — from hardware prototypes to production web apps.",
+  },
+  {
+    period: "2022 — 2026",
+    role: "B.Sc. Informatics, Data Science & ML",
+    org: "Udayana University",
+    description:
+      "Focused on machine learning, data engineering, and applied NLP. GPA 3.8 / 4.0.",
+  },
+];
 
 export type Project = {
   slug: string;
   title: string;
   year: string;
-  category: string;
-  role: string;
-  summary: string;
-  stack: string[];
-  cover: string;
-  links?: { repo?: string; demo?: string };
+  tags: string[];
   featured: boolean;
+  role: string;
+  stack: string;
+  type: string;
+  cover: [string, string];
+  caseStudy: { problem: string; approach: string; result: string };
+  metrics: { value: string; label: string }[];
 };
+
+/**
+ * Home covers (Work Card set 25:57) use four gradients; the remaining Projects
+ * cards reuse them in order until real artwork lands.
+ */
+const covers: [string, string][] = [
+  ["#312E81", "#6366F1"], // indigo-900 → indigo-500
+  ["#064E3B", "#10B981"], // emerald-900 → emerald-500
+  ["#7C2D12", "#F97316"], // orange-900 → orange-500
+  ["#1E3A8A", "#38BDF8"], // blue-900 → sky-400
+];
 
 export const projects: Project[] = [
   {
-    slug: "mentalys",
-    title: "Mentalys",
+    slug: "lexa",
+    title: "Lexa",
     year: "2026",
-    category: "Machine Learning",
-    role: "Solo — thesis",
-    summary:
-      "On-device depression-risk screening app fusing PHQ-9, facial emotion, and voice emotion into one explainable score.",
-    stack: ["Kotlin", "TensorFlow Lite", "PyTorch", "Node.js", "Cloud Run"],
-    cover: "/covers/mentalys.svg",
+    tags: ["NLP", "Machine Learning"],
     featured: true,
+    role: "ML Engineer",
+    stack: "Python, PyTorch, FastAPI",
+    type: "NLP / Local Language",
+    cover: covers[0],
+    caseStudy: {
+      problem:
+        "Most speech and text tools ignore regional languages. Lexa needed to understand Balinese and Javanese input with almost no labeled data.",
+      approach:
+        "I built a cleaning pipeline for scraped corpora, fine-tuned a multilingual transformer, and evaluated it against native-speaker annotations.",
+      result:
+        "+18% F1 over the baseline, 4× faster inference, and a public demo used by 2,000+ people in its first month.",
+    },
+    metrics: [
+      { value: "+18%", label: "F1 score" },
+      { value: "4×", label: "Faster inference" },
+      { value: "2,000+", label: "Monthly users" },
+    ],
   },
   {
-    slug: "siraja",
-    title: "SIRAJA",
+    slug: "pulse",
+    title: "Pulse",
     year: "2025",
-    category: "Deep Learning",
-    role: "Solo",
-    summary:
-      "Heart-sound classifier for early cardiovascular screening using a CNN-LSTM architecture and MFCC features.",
-    stack: ["Python", "TensorFlow", "Keras", "Librosa", "Hugging Face"],
-    cover: "/covers/siraja.svg",
+    tags: ["Data", "Machine Learning"],
     featured: true,
+    role: "Data Scientist",
+    stack: "Python, pandas, scikit-learn",
+    type: "Forecasting",
+    cover: covers[1],
+    caseStudy: {
+      problem:
+        "Monthly demand was planned from spreadsheets, so stockouts and overstock both ran high.",
+      approach:
+        "Built a feature pipeline over three years of sales history and compared gradient-boosted and seasonal baselines on a rolling-origin split.",
+      result:
+        "Cut forecast error by a third and shipped the model behind an internal dashboard.",
+    },
+    metrics: [
+      { value: "−33%", label: "Forecast error" },
+      { value: "3 yrs", label: "History modeled" },
+      { value: "12", label: "SKU groups" },
+    ],
   },
   {
-    slug: "emotiscan",
-    title: "EmotiScan",
+    slug: "nodewatch",
+    title: "Nodewatch",
+    year: "2025",
+    tags: ["IoT", "Data"],
+    featured: true,
+    role: "Full-stack Developer",
+    stack: "Python, MQTT, Next.js",
+    type: "IoT Systems",
+    cover: covers[2],
+    caseStudy: {
+      problem:
+        "Sensor readings were logged to local files, so nobody saw a failure until a site visit.",
+      approach:
+        "Streamed device telemetry over MQTT into a time-series store and built alert rules with a live web view.",
+      result: "Failures surface in seconds instead of days, across six field sites.",
+    },
+    metrics: [
+      { value: "6", label: "Field sites" },
+      { value: "<5s", label: "Alert latency" },
+      { value: "99.9%", label: "Uptime" },
+    ],
+  },
+  {
+    slug: "ledger",
+    title: "Ledger",
     year: "2024",
-    category: "Computer Vision",
-    role: "Solo",
-    summary:
-      "Real-time facial emotion recognition from webcam input using GLCM texture features and an ANN classifier.",
-    stack: ["Python", "OpenCV", "TensorFlow"],
-    cover: "/covers/emotiscan.svg",
+    tags: ["Machine Learning"],
     featured: true,
+    role: "ML Engineer",
+    stack: "Python, scikit-learn, FastAPI",
+    type: "Anomaly Detection",
+    cover: covers[3],
+    caseStudy: {
+      problem: "Manual review could not keep pace with transaction volume.",
+      approach:
+        "Trained an anomaly detector on imbalanced transaction data and tuned the threshold against reviewer capacity, not accuracy alone.",
+      result: "Flagged 80% of true anomalies with a quarter of the manual review load.",
+    },
+    metrics: [
+      { value: "80%", label: "Recall" },
+      { value: "−75%", label: "Manual review" },
+      { value: "0.91", label: "ROC AUC" },
+    ],
   },
   {
-    slug: "locus-hotel",
-    title: "Locus Hotel",
+    slug: "atlas",
+    title: "Atlas",
     year: "2024",
-    category: "Web Development",
-    role: "Front end",
-    summary:
-      "Responsive hotel website built from Figma prototypes, integrated with a Laravel backend for routing and content.",
-    stack: ["HTML5", "CSS3", "JavaScript", "Laravel"],
-    cover: "/covers/locus.svg",
-    featured: true,
-  },
-];
-
-export const capabilities = [
-  {
-    name: "Machine Learning",
-    description:
-      "Model design, training, and evaluation — CNNs, LSTMs, and multi-modal fusion — shipped all the way to on-device inference.",
-  },
-  {
-    name: "Data Science & Analytics",
-    description:
-      "Cleaning, preprocessing, statistical analysis, and visualisation on messy real-world data.",
+    tags: ["NLP"],
+    featured: false,
+    role: "NLP Engineer",
+    stack: "Python, Hugging Face",
+    type: "NLP",
+    cover: covers[0],
+    caseStudy: {
+      problem: "Document search relied on exact keyword matches.",
+      approach:
+        "Built an embedding index with a lightweight reranker over the top candidate set.",
+      result: "Relevant documents moved into the top three results for most queries.",
+    },
+    metrics: [
+      { value: "3×", label: "Faster search" },
+      { value: "0.87", label: "NDCG@10" },
+      { value: "40k", label: "Documents" },
+    ],
   },
   {
-    name: "NLP / Local Language",
-    description:
-      "Evaluating LLM output for Indonesian regional languages and documenting Balinese linguistic conventions.",
-  },
-  {
-    name: "Computer Vision",
-    description:
-      "Image captioning, facial emotion analysis, and live video processing with VGG-16, attention models, and OpenCV.",
-  },
-  {
-    name: "Web Development",
-    description:
-      "Front-end interfaces and data tools — Next.js and React on the modern side, Python pipelines behind them.",
-  },
-];
-
-// Figma Home "The Toolkit" — CV-backed tools only, same 12 on both breakpoints.
-// `group` replaces the Figma tile's "N yrs" label: experience years were never
-// stated anywhere, and the audit flagged invented numbers as a credibility risk.
-const tool = (name: string, slug: string, group: string) => ({ name, slug, group });
-
-export const techStack = [
-  tool("Python", "python", "Language"),
-  tool("TensorFlow", "tensorflow", "Deep Learning"),
-  tool("Keras", "keras", "Deep Learning"),
-  tool("PyTorch", "pytorch", "Deep Learning"),
-  tool("scikit-learn", "scikitlearn", "Machine Learning"),
-  tool("Hugging Face", "huggingface", "Machine Learning"),
-  tool("pandas", "pandas", "Data Science"),
-  tool("NumPy", "numpy", "Data Science"),
-  tool("Jupyter", "jupyter", "Data Science"),
-  tool("OpenCV", "opencv", "Computer Vision"),
-  tool("Next.js", "nextdotjs", "Web"),
-  tool("React", "react", "Web"),
-];
-
-export const highlights = [
-  { value: "3.84", label: "GPA, Computer Science — Universitas Udayana" },
-  { value: "0.415", label: "BLEU score, first-author image-captioning paper" },
-  { value: "Top 10%", label: "Bangkit Academy ML cohort, 1,500+ participants" },
-  { value: "146", label: "Schools reached in Bali's province-wide rollout" },
-];
-
-export const awards = [
-  {
-    title: "Top 10 Participant — Blockchain Technology Apprentice",
-    issuer: "Mandala Chain Foundation, award from the Governor of Bali at DTIKFest",
-    year: "2025",
-  },
-  {
-    title: "Graduated with Distinction — Machine Learning Cohort",
-    issuer: "Bangkit Academy (Google, Tokopedia, Gojek & Traveloka)",
-    year: "2025",
-  },
-  {
-    title: "Dev Certification for Machine Learning with TensorFlow",
-    issuer: "dev.cert — valid through May 2028",
-    year: "2025",
-  },
-  {
-    title: "Top 50 Team Recognition (of 644 teams)",
-    issuer: "Bangkit Academy Batch 2",
+    slug: "sentra",
+    title: "Sentra",
     year: "2024",
+    tags: ["Machine Learning", "Data"],
+    featured: false,
+    role: "Data Scientist",
+    stack: "Python, pandas",
+    type: "Analytics",
+    cover: covers[1],
+    caseStudy: {
+      problem: "Reporting was rebuilt by hand every month.",
+      approach: "Modeled the warehouse once and generated the recurring reports from it.",
+      result: "Monthly reporting dropped from days of work to a scheduled job.",
+    },
+    metrics: [
+      { value: "−90%", label: "Reporting time" },
+      { value: "18", label: "Source tables" },
+      { value: "1", label: "Model" },
+    ],
+  },
+  {
+    slug: "bloom",
+    title: "Bloom",
+    year: "2023",
+    tags: ["NLP"],
+    featured: false,
+    role: "ML Engineer",
+    stack: "Python, TensorFlow",
+    type: "Classification",
+    cover: covers[2],
+    caseStudy: {
+      problem: "Support tickets were routed by hand to the wrong teams.",
+      approach:
+        "Fine-tuned a text classifier on labeled tickets and routed with a confidence fallback.",
+      result:
+        "Two thirds of tickets now route automatically, with low-confidence cases kept for humans.",
+    },
+    metrics: [
+      { value: "66%", label: "Auto-routed" },
+      { value: "0.89", label: "F1" },
+      { value: "9", label: "Categories" },
+    ],
+  },
+  {
+    slug: "orbit",
+    title: "Orbit",
+    year: "2023",
+    tags: ["Web", "Data"],
+    featured: false,
+    role: "Developer",
+    stack: "Next.js, Python",
+    type: "Web",
+    cover: covers[3],
+    caseStudy: {
+      problem: "Public data lived in hard-to-read spreadsheets.",
+      approach: "Built a small web app that fetches, caches, and charts the open dataset.",
+      result:
+        "Anyone can read the numbers in a browser, and the dataset refreshes on a schedule.",
+    },
+    metrics: [
+      { value: "24", label: "Charts" },
+      { value: "<1s", label: "Load time" },
+      { value: "100", label: "Lighthouse" },
+    ],
   },
 ];
 
-export const experience = [
-  {
-    role: "Local Language Specialist Intern",
-    company: "PT GoTo Gojek Tokopedia Tbk",
-    period: "Jul 2026 — Present",
-    description:
-      "Evaluating LLM responses for Indonesian regional languages, focused on Balinese. Redesigned the evaluation rubric and documented core linguistic conventions.",
-  },
-  {
-    role: "Engineer On-Site / IT Support",
-    company: "PT Metra-Net — Dinas Pendidikan Provinsi Bali",
-    period: "May — Jul 2026",
-    description:
-      "Supported the SIAP SPMB Online rollout across 146 schools and 40,000+ admissions, and shipped Python automation as a Streamlit app.",
-  },
-  {
-    role: "Junior Data Science Intern",
-    company: "PT Vinix Seven Aurum",
-    period: "Mar — Jun 2025",
-    description:
-      "Cleaned and preprocessed datasets for ML projects and built recommendation and visualisation features for the Insight-PTN dashboard.",
-  },
-  {
-    role: "Blockchain Technology Apprentice",
-    company: "Mandala Chain Foundation",
-    period: "Feb — Mar 2025",
-    description:
-      "Deployed soulbound NFT contracts on the Niskala testnet and completed the Polkadot Developer Bootcamp.",
-  },
-  {
-    role: "Machine Learning Cohort Participant",
-    company: "Bangkit Academy",
-    period: "Sep 2024 — Jan 2025",
-    description:
-      "Built and evaluated three AI models, graduated with distinction, and led a project team to Top 50 of 644 teams.",
-  },
-  {
-    role: "Web Developer",
-    company: "PT Econdelight",
-    period: "Aug — Sep 2024",
-    description:
-      "Built a responsive hotel website front end from Figma prototypes against a Laravel backend.",
-  },
-];
+export const homeProjects = projects.filter((p) => p.featured);
 
-export const aboutParagraphs = [
-  "I'm Prana, a computer science graduate from Universitas Udayana who likes the part of machine learning where the model has to leave the notebook.",
-  "I build systems end to end — on-device deep learning, multilingual data work, and the interfaces that make the output legible to someone who will never read the code.",
-  "Most of my work sits where language, vision, and health data meet. I care more about whether a model survives contact with real users than about a leaderboard number.",
-  "Right now I'm at GoTo's Data Science team, evaluating how well large language models handle Indonesian regional languages.",
-];
+export function projectBySlug(slug: string) {
+  return projects.find((p) => p.slug === slug);
+}
 
-export type { StaticImageData };
+export function nextProject(slug: string) {
+  const i = projects.findIndex((p) => p.slug === slug);
+  return projects[(i + 1) % projects.length];
+}
