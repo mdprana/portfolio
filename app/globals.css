@@ -38,3 +38,31 @@ body {
     scroll-behavior: auto !important;
   }
 }
+
+/* Toolkit marquee. Pauses on hover, on keyboard focus, and for reduced motion
+   — the Figma version paused on hover only, which touch users never trigger. */
+.marquee {
+  animation: marquee 40s linear infinite;
+  width: max-content;
+}
+
+.marquee:hover,
+.marquee:focus-within {
+  animation-play-state: paused;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .marquee {
+    animation: none;
+    flex-wrap: wrap;
+  }
+}
+
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
