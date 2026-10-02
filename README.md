@@ -43,3 +43,23 @@ docs/           PRD, design audit
 ## Content
 
 All copy lives in `lib/` — no strings hardcoded in components. Facts (awards, metrics, stack) are limited to what is verifiable from the CV and published work.
+
+## Commits
+
+Conventional Commits, one commit per finished section or page, pushed to `main` as soon as it builds:
+
+```
+feat(home): build hero, featured projects, capabilities, toolkit, highlights
+feat(projects): add index page and case-study template
+fix(a11y): …
+docs: …
+```
+
+Rules:
+- The commit message explains *why*, not just what.
+- `npm run build` must pass before pushing.
+- Author and committer are the repository owner only. No tooling, agent, or
+  co-author attribution appears anywhere in the history.
+- Audit findings that the change resolves are named in the message body, so the
+  reason survives without re-reading `docs/design-audit.md`.
+
