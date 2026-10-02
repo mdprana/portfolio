@@ -27,9 +27,26 @@ export default function FitText({
     const fit = () => {
       const width = el.clientWidth;
       if (!width) return;
-      el.style.fontSize = "100px";
-      const natural = el.scrollWidth;
-      if (natural) el.style.fontSize = `${(width * 100) / natural}px`;
+      const figmaSize: Record<string, number> = {
+        prana: 530,
+        "Featured Projects": 176,
+        "About Prana": 248,
+        "The Toolkit": 279,
+        Highlights: 302,
+        "Get in touch": 257,
+      };
+      if (figmaSize[text]) {
+        el.style.fontSize = `${figmaSize[text] * width / 1392}px`;
+        return;
+      }
+      const probe = document.createElement("span");
+      probe.textContent = text;
+      probe.style.cssText =
+        "position:absolute;visibility:hidden;white-space:nowrap;font:inherit;letter-spacing:inherit";
+      el.appendChild(probe);
+      const natural = probe.getBoundingClientRect().width;
+      probe.remove();
+      if (natural) el.style.fontSize = `${(width * parseFloat(getComputedStyle(el).fontSize)) / natural}px`;
     };
 
     fit();
