@@ -1,0 +1,40 @@
+@import "tailwindcss";
+
+/* Design tokens — source: Figma `Tokens [20:124]` + design audit.
+   text-subtle raised from #737373 (4.43:1, fails AA) to #999999 (7.37:1). */
+@theme {
+  --color-bg: #000000;
+  --color-fg: #ffffff;
+  --color-muted: #b3b3b3; /* 10.02:1 */
+  --color-subtle: #999999; /* 7.37:1 */
+  --color-line: rgb(255 255 255 / 0.15);
+
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+
+  --radius-card: 24px;
+
+  --spacing-gutter: 24px;
+  --container-content: 1392px;
+}
+
+html {
+  background: var(--color-bg);
+  color-scheme: dark;
+}
+
+body {
+  background: var(--color-bg);
+  color: var(--color-fg);
+  font-family: var(--font-sans);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
