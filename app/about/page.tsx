@@ -19,7 +19,7 @@ export default function AboutPage() {
           <FitText text="About Prana" as="h1" />
 
           <div className="flex flex-col gap-12 md:flex-row md:gap-16">
-            <div className="h-[340px] w-[310px] shrink-0 bg-surface md:sticky md:top-24" />
+            <div className="h-[340px] w-[310px] shrink-0 bg-[url(/portrait.jpg)] bg-cover bg-center md:sticky md:top-24" />
 
             <div className="flex max-w-[760px] flex-col gap-10">
               <p className="body-xl text-fg">{profile.paragraphs[0]}</p>

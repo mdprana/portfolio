@@ -96,7 +96,7 @@ export default async function ProjectPage({
                 key={metric.label}
                 className="flex flex-col gap-2 rounded-card bg-surface px-8 py-8"
               >
-                <span className="text-[96px] font-bold leading-none tracking-[-0.05em]">
+                <span className="text-[72px] md:text-[96px] font-bold leading-none tracking-[-0.05em]">
                   {metric.value}
                 </span>
                 <span className="text-base text-muted">{metric.label}</span>
@@ -122,9 +122,7 @@ export default async function ProjectPage({
         <Reveal>
           <Link href={`/projects/${next.slug}`} className="group frame block pb-10">
             <span className="label">(Next project)</span>
-            <p className="body-xl mt-4 flex items-center gap-4 text-[385px] transition-colors duration-300 group-hover:text-muted">
-              {next.title} →
-            </p>
+            <FitText text={`${next.title} →`} as="p" className="mt-4 transition-colors duration-300 group-hover:text-muted" />
           </Link>
         </Reveal>
       </main>

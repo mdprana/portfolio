@@ -1,11 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+
 import FitText from "@/components/fit-text";
 import {
-  ArrowRight,
-  ArrowSub,
   ArrowUp,
   Download,
 } from "@/components/icons";
@@ -89,16 +87,16 @@ export default function Footer() {
             </div>
           ))}
         </div>
-      </div>
 
       <div className="flex items-center justify-between">
         <Link
-          href="#top"
+          href="#"
           className="group inline-flex items-center gap-2 text-base transition-colors duration-250 hover:text-muted"
         >
           Back to Top
           <ArrowUp />
         </Link>
+      </div>
       </div>
 
       <div className="flex justify-between text-sm text-subtle">
