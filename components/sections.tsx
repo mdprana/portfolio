@@ -19,7 +19,11 @@ export function Hero() {
     <section id="top" className="frame flex flex-col gap-6 pb-2">
       <FitText text={profile.headline} as="h1" className="text-fg" />
       <div className="pb-8">
-        <p className="body-xl ml-auto max-w-[980px] text-muted">{profile.intro}</p>
+        <p className="body-xl ml-auto max-w-[980px] text-muted">
+          {profile.intro.map((part) =>
+            part.strong ? <strong key={part.text} className="text-fg">{part.text}</strong> : part.text,
+          )}
+        </p>
       </div>
       <HeroImage />
     </section>

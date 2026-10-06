@@ -1,96 +1,57 @@
 import type { Metadata } from "next";
-import FitText from "@/components/fit-text";
-import Footer from "@/components/footer";
 import Nav from "@/components/nav";
-import { profile } from "@/lib/content";
+import Footer from "@/components/footer";
+import FitText from "@/components/fit-text";
+import Reveal from "@/components/reveal";
+import { ArrowRight } from "@/components/icons";
+import { footerColumns, profile } from "@/lib/content";
 
 export const metadata: Metadata = { title: "Contact" };
 
-const info = [
-  { label: "(Email)", value: profile.email, href: `mailto:${profile.email}` },
-  { label: "(Location)", value: profile.location },
-  { label: "(Social)", value: profile.socialLine },
-];
-
-const fields = [
-  { name: "name", label: "Name", type: "text", required: true },
-  { name: "email", label: "Email", type: "email", required: true },
-  { name: "company", label: "Company (optional)", type: "text", required: false },
-];
-
-/** Contact page (Figma 18:213) — fit-width title, info column, underline form. */
+/**
+ * Contact (Figma 18:213) — header copy, then the contact details.
+ * No form: the reference site and the Figma "Say Hello" link both open the
+ * visitor's mail client directly, so every row is a mailto or a social URL.
+ */
 export default function ContactPage() {
+  const socials =
+    footerColumns
+      .find((column) => column.label === "(Social)")
+      ?.links.filter((link) => link.href && link.href !== "https://www.instagram.com/") ?? [];
+
+  const rows = [
+    { label: "Email me", value: profile.email, href: `mailto:${profile.email}` },
+    ...socials.map((link) => ({ label: link.text, value: link.href, href: link.href })),
+  ];
+
   return (
     <>
       <Nav />
       <main>
-        <header className="frame flex flex-col gap-10 pb-20 pt-6">
-          <FitText text={profile.contactTitle} as="h1" />
-          <p className="body-xl max-w-[980px] text-muted">{profile.availability}</p>
-        </header>
+        <section className="frame flex flex-col gap-10 pb-24 pt-6">
+          <FitText text="Let’s talk" as="h1" />
 
-        <section className="frame flex flex-col gap-16 pb-[120px] md:flex-row md:justify-between">
-          <div className="flex flex-col gap-8">
-            {info.map((item) => (
-              <div key={item.label} className="flex flex-col gap-2">
-                <span className="label">{item.label}</span>
-                {item.href ? (
+          <Reveal className="flex max-w-[820px] flex-col gap-6 md:ml-auto">
+            <p className="body-xl text-muted">{profile.availability}</p>
+          </Reveal>
+
+          <Reveal delay={80} className="flex flex-col">
+            <ul className="mt-6 w-full max-w-[980px] md:ml-auto">
+              {rows.map((row) => (
+                <li key={row.label} className="border-b border-line">
                   <a
-                    href={item.href}
-                    className="text-2xl transition-colors duration-250 hover:text-muted"
+                    href={row.href}
+                    className="group flex items-center justify-between gap-6 py-7 transition-colors duration-300 hover:text-muted"
                   >
-                    {item.value}
+                    <span className="text-[clamp(32px,4.5vw,56px)] font-bold leading-none tracking-[-0.04em]">
+                      {row.label}
+                    </span>
+                    <ArrowRight size={40} className="shrink-0 transition-transform duration-300 group-hover:translate-x-2" />
                   </a>
-                ) : (
-                  <span className="text-2xl">{item.value}</span>
-                )}
-              </div>
-            ))}
-          </div>
-
-          <form
-            className="flex w-full max-w-[750px] flex-col"
-            action={`mailto:${profile.email}`}
-            method="post"
-            encType="text/plain"
-          >
-            {fields.map((field) => (
-              <label
-                key={field.name}
-                className="flex flex-col border-b border-line py-7 transition-colors duration-300 focus-within:border-fg"
-              >
-                <span className="sr-only">{field.label}</span>
-                <input
-                  name={field.name}
-                  type={field.type}
-                  required={field.required}
-                  placeholder={field.label}
-                  autoComplete={field.name === "company" ? "organization" : field.name}
-                  className="bg-transparent text-[32px] tracking-[-0.03em] outline-none placeholder:text-subtle"
-                />
-              </label>
-            ))}
-
-            <label className="flex flex-col border-b border-line py-7 pb-[120px] transition-colors duration-300 focus-within:border-fg">
-              <span className="sr-only">Tell me about your project</span>
-              <textarea
-                name="message"
-                rows={2}
-                required
-                placeholder="Tell me about your project"
-                className="resize-none bg-transparent text-[32px] tracking-[-0.03em] outline-none placeholder:text-subtle"
-              />
-            </label>
-
-            <div className="pt-10">
-              <button
-                type="submit"
-                className="inline-flex h-[51px] items-center rounded-pill bg-fg px-7 text-base font-medium text-bg transition-colors duration-300 hover:bg-muted"
-              >
-                Send message
-              </button>
-            </div>
-          </form>
+                </li>
+              ))}
+            </ul>
+          </Reveal>
         </section>
       </main>
       <Footer />

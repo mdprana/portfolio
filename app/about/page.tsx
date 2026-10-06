@@ -30,11 +30,7 @@ export default function AboutPage() {
                 {timeline.map((item, i) => (
                   <li key={item.role} className="flex gap-10">
                     <div className="flex w-6 shrink-0 flex-col items-center">
-                      <span
-                        className={`mt-10 size-4 rounded-full border border-fg ${
-                          i === 0 ? "bg-fg" : "bg-bg"
-                        }`}
-                      />
+                      <span className="mt-10 size-4 shrink-0 rounded-full bg-fg" />
                       {i < timeline.length - 1 && (
                         <span className="w-0.5 flex-1 bg-line-strong" />
                       )}
@@ -72,7 +68,7 @@ export default function AboutPage() {
             {capabilities.map((item) => (
               <li
                 key={item.label}
-                className="group flex flex-col justify-between border-b border-line transition-colors duration-300 hover:border-line-strong"
+                className="group flex flex-col justify-between border-b border-line transition-colors duration-300 hover:border-fg"
               >
                 <span className="flex items-center gap-6 py-7 text-4xl font-bold tracking-[-0.04em] transition-all duration-300 group-hover:gap-9">
                   <ArrowSub className={item.dim ? "text-dim" : "text-fg"} />

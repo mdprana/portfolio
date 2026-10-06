@@ -7,9 +7,18 @@
 export const profile = {
   wordmark: "PRANA",
   headline: "prana", // Home hero (14:15)
-  intro:
-    "I turn messy data into useful products — building machine learning models, data pipelines, and web experiences that are accurate, fast, and make a measurable impact.",
-  email: "hello@prana.dev",
+  // Hero intro (14:18) — muted base with white bold phrases, split so the
+  // markup mirrors the Figma styled-text segments.
+  intro: [
+    { text: "I turn messy data into useful products — building " },
+    { text: "machine learning models", strong: true },
+    { text: ", data pipelines, and " },
+    { text: "web experiences", strong: true },
+    { text: " that are accurate, fast, and " },
+    { text: "make a measurable impact", strong: true },
+    { text: "." },
+  ],
+  email: "mdpranajaya@gmail.com",
   location: "Bali, Indonesia — WITA (UTC+8)",
   locationShort: "Bali, Indonesia",
   socialLine: "LinkedIn · GitHub · Threads",
@@ -21,7 +30,7 @@ export const profile = {
   paragraphs: [
     "Hi, I’m Prana — a data scientist and ML engineer helping teams turn raw data into clear decisions and products people actually use.",
     "I work across the stack: from cleaning messy datasets and training models, to shipping them behind fast, thoughtful web interfaces.",
-    "Whether it’s language models for local languages, forecasting, or IoT sensing, my process is iterative, grounded in evaluation, and built to last.",
+    "Whether it’s language models for local languages, forecasting, or analytics tooling, my process is iterative, grounded in evaluation, and built to last.",
     "I believe good models aren’t just accurate. They’re explainable, reliable, and move people to make better decisions.",
   ],
 };
@@ -91,8 +100,7 @@ export const capabilities = [
   { label: "Machine Learning", dim: false },
   { label: "Data Science & Analytics", dim: true },
   { label: "NLP & Local Language", dim: false },
-  { label: "IoT Systems", dim: true },
-  { label: "Web Development", dim: false },
+  { label: "Web Development", dim: true },
 ];
 
 export const filters = ["All", "Machine Learning", "Data", "NLP", "IoT", "Web"];

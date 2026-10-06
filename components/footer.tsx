@@ -49,14 +49,14 @@ export function ResumeButton() {
 export default function Footer() {
   return (
     <footer className="frame flex flex-col gap-12 pb-8 pt-6">
-      <FitText text="Get in touch" as="p" />
+      <a href={`mailto:${profile.email}`} aria-label="Get in touch by email"><FitText text="Get in touch" as="p" /></a>
 
       <div className="flex flex-col gap-8 md:flex-row md:items-center md:justify-between">
         <p className="body-xl max-w-[760px] text-muted">
           Have a project, role, or dataset in mind? Let’s talk.
         </p>
         <div className="flex gap-3">
-          <Pill label="Say Hello" href="/contact" />
+          <Pill label="Say Hello" href={`mailto:${profile.email}`} />
           <ResumeButton />
         </div>
       </div>
@@ -67,7 +67,8 @@ export default function Footer() {
         <p className="text-[96px] font-bold leading-[0.8] tracking-[-0.04em]">
           {profile.wordmark}
         </p>
-        <div className="flex flex-wrap gap-24">
+
+        <div className="flex flex-wrap gap-16 md:gap-24">
           {footerColumns.map((column) => (
             <div key={column.label} className="flex flex-col gap-2.5 text-base">
               <p className="text-muted">{column.label}</p>
@@ -86,17 +87,15 @@ export default function Footer() {
               )}
             </div>
           ))}
-        </div>
 
-      <div className="flex items-center justify-between">
-        <Link
-          href="#"
-          className="group inline-flex items-center gap-2 text-base transition-colors duration-250 hover:text-muted"
-        >
-          Back to Top
-          <ArrowUp />
-        </Link>
-      </div>
+          <Link
+            href="#top"
+            className="group inline-flex items-start gap-2 self-start text-base transition-colors duration-250 hover:text-muted"
+          >
+            Back to Top
+            <ArrowUp />
+          </Link>
+        </div>
       </div>
 
       <div className="flex justify-between text-sm text-subtle">

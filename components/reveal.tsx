@@ -19,10 +19,8 @@ export default function Reveal({
     if (!el) return;
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (!entry.isIntersecting) return;
-        el.style.transitionDelay = `${delay}ms`;
-        el.classList.add("in");
-        observer.disconnect();
+        el.style.transitionDelay = entry.isIntersecting ? `${delay}ms` : "0ms";
+        el.classList.toggle("in", entry.isIntersecting);
       },
       { rootMargin: "0px 0px -15% 0px" },
     );

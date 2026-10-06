@@ -25,7 +25,7 @@ function Clock() {
 
   // Fixed width so the layout does not jitter as the seconds tick over.
   return (
-    <span className="inline-block w-[106px] tabular-nums" suppressHydrationWarning>
+    <span className="inline-block w-[150px] whitespace-nowrap tabular-nums" suppressHydrationWarning>
       {time || "00:00:00"} WITA
     </span>
   );
@@ -38,10 +38,12 @@ function MobileMenu({ onClose }: { onClose: () => void }) {
   useEffect(() => {
     setMounted(true);
     document.body.style.overflow = "hidden";
+    document.documentElement.classList.add("scroll-lock");
     const onKey = (e: KeyboardEvent) => e.key === "Escape" && onClose();
     window.addEventListener("keydown", onKey);
     return () => {
       document.body.style.overflow = "";
+      document.documentElement.classList.remove("scroll-lock");
       window.removeEventListener("keydown", onKey);
     };
   }, [onClose]);
@@ -90,7 +92,7 @@ export default function Nav() {
 
   return (
     <>
-      <header className="frame top-0 z-50 flex items-center justify-between py-5 md:py-[30px]">
+      <header className="frame relative top-0 z-50 flex items-center justify-between py-5 md:py-[30px]">
         <Link href="/" className="text-[15px] md:text-base">
           {profile.wordmark}
         </Link>
