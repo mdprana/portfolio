@@ -2,7 +2,12 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { motion } from "motion/react";
+import { MotionLink } from "@/components/motion";
 import { nav, profile } from "@/lib/content";
+import { hoverRoot, quint, textMuted, tw } from "@/lib/motion";
+
+const roll = { rest: { y: 0 }, hover: { y: -20 } };
 
 function Clock() {
   const [time, setTime] = useState("");
@@ -33,10 +38,7 @@ function Clock() {
 
 /** Menu Open — Mobile 390 (Figma 19:93). */
 function MobileMenu({ onClose }: { onClose: () => void }) {
-  const [mounted, setMounted] = useState(false);
-
   useEffect(() => {
-    setMounted(true);
     document.body.style.overflow = "hidden";
     document.documentElement.classList.add("scroll-lock");
     const onKey = (e: KeyboardEvent) => e.key === "Escape" && onClose();
@@ -54,18 +56,23 @@ function MobileMenu({ onClose }: { onClose: () => void }) {
         <Link href="/" className="text-[15px]" onClick={onClose}>
           {profile.wordmark}
         </Link>
-        <button
+        <motion.button
           type="button"
           onClick={onClose}
-          className="text-[15px] transition-colors duration-250 hover:text-muted"
+          className="text-[15px]"
+          initial={{ color: textMuted.rest.color }}
+          whileHover={textMuted.hover}
+          transition={tw(250)}
         >
           CLOSE
-        </button>
+        </motion.button>
       </div>
 
-      <nav
+      <motion.nav
         className="flex flex-col gap-1"
-        style={{ opacity: mounted ? 1 : 0, transition: "opacity 0.3s" }}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.3, ease: [0.25, 0.1, 0.25, 1] }}
         aria-label="Mobile"
       >
         {[{ label: "Home", href: "/" }, ...nav].map((item) => (
@@ -78,7 +85,7 @@ function MobileMenu({ onClose }: { onClose: () => void }) {
             {item.label.charAt(0) + item.label.slice(1).toLowerCase()}
           </Link>
         ))}
-      </nav>
+      </motion.nav>
 
       <a href={`mailto:${profile.email}`} className="text-[18px]">
         {profile.email}
@@ -99,12 +106,22 @@ export default function Nav() {
 
         <nav className="hidden items-center gap-12 md:flex" aria-label="Primary">
           {nav.map((item) => (
-            <Link key={item.href} href={item.href} className="block">
-              <span className="roll">
-                <span>{item.label}</span>
-                <span aria-hidden>{item.label}</span>
+            <MotionLink key={item.href} href={item.href} className="block" {...hoverRoot} whileFocus="hover">
+              {/* Link roll: two stacked labels, second slides in on hover (Figma 0.35s). */}
+              <span className="relative block h-5 overflow-hidden">
+                <motion.span className="block h-5" variants={roll} transition={{ duration: 0.35, ease: quint }}>
+                  {item.label}
+                </motion.span>
+                <motion.span
+                  aria-hidden
+                  className="absolute start-0 top-5 block h-5"
+                  variants={roll}
+                  transition={{ duration: 0.35, ease: quint }}
+                >
+                  {item.label}
+                </motion.span>
               </span>
-            </Link>
+            </MotionLink>
           ))}
         </nav>
 

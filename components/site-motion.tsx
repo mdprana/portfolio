@@ -2,15 +2,15 @@
 
 import { useEffect } from "react";
 import { usePathname } from "next/navigation";
-import { animate, motion, useMotionValue, useSpring } from "motion/react";
+import { animate, inView, motion, useMotionValue, useSpring } from "motion/react";
+import { quint } from "@/lib/motion";
 
 const spring = { stiffness: 500, damping: 60, mass: 1 };
 
 /**
  * Site-wide motion: inversion cursor, inertial scroll, scroll reveals.
  * All effects are opt-out (reduced motion) and non-blocking; content stays
- * visible when JS never runs because `.motion-reveal` only hides under
- * `html.motion-ready`.
+ * visible when JS never runs because reveal targets are only hidden here.
  */
 export default function SiteMotion() {
   const pathname = usePathname();
@@ -28,33 +28,25 @@ export default function SiteMotion() {
     let frame = 0;
 
     /* ---- Scroll reveals: fade/slide in once, never hide again. ---- */
-    let observer: IntersectionObserver | undefined;
-    const nodes = document.querySelectorAll<HTMLElement>(
-      "main section > .display, main section > div, main section > ul, footer > .display, footer > div",
+    const nodes = reduce
+      ? []
+      : [...document.querySelectorAll<HTMLElement>(
+          "main section > .display, main section > div, main section > ul, footer > .display, footer > div",
+        )].filter(node => !node.hasAttribute("data-reveal"));
+    nodes.forEach(node => animate(node, { opacity: 0, y: 36 }, { duration: 0.22, ease: quint }));
+    const stopReveal = inView(
+      nodes,
+      node => { animate(node, { opacity: 1, y: 0 }, { duration: 0.9, ease: quint }); },
+      { margin: "0px 0px -8% 0px" },
     );
-    if (!reduce && nodes.length) {
-      root.classList.add("motion-ready");
-      nodes.forEach(node => node.classList.add("motion-reveal"));
-      observer = new IntersectionObserver(
-        entries => {
-          for (const entry of entries)
-            if (entry.isIntersecting) {
-              entry.target.classList.add("motion-in");
-              observer?.unobserve(entry.target);
-            }
-        },
-        { rootMargin: "0px 0px -8% 0px" },
-      );
-      nodes.forEach(node => observer?.observe(node));
-    }
+    const resetReveal = () => {
+      stopReveal();
+      nodes.forEach(node => { node.style.opacity = ""; node.style.transform = ""; });
+    };
 
     /* ---- Cursor + inertial scroll are pointer-only extras. ---- */
     if (!fine || reduce) {
-      return () => {
-        observer?.disconnect();
-        nodes.forEach(node => node.classList.remove("motion-reveal", "motion-in"));
-        root.classList.remove("motion-ready");
-      };
+      return resetReveal;
     }
 
     root.classList.add("custom-cursor");
@@ -114,9 +106,8 @@ export default function SiteMotion() {
 
     return () => {
       cancelAnimationFrame(frame);
-      observer?.disconnect();
-      nodes.forEach(node => node.classList.remove("motion-reveal", "motion-in"));
-      root.classList.remove("custom-cursor", "motion-ready");
+      resetReveal();
+      root.classList.remove("custom-cursor");
       window.removeEventListener("pointermove", move);
       document.removeEventListener("pointerleave", leave);
       window.removeEventListener("blur", leave);

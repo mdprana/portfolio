@@ -1,9 +1,11 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { motion } from "motion/react";
 import FitText from "@/components/fit-text";
 import WorkCard from "@/components/work-card";
 import { filters, projects } from "@/lib/content";
+import { color, tw } from "@/lib/motion";
 
 /** Projects page (Figma 18:2) — fit-width title, filter chips, 2-column grid. */
 export default function ProjectsGrid() {
@@ -25,19 +27,23 @@ export default function ProjectsGrid() {
           {filters.map((filter) => {
             const on = filter === active;
             return (
-              <button
+              <motion.button
                 key={filter}
                 type="button"
                 onClick={() => setActive(filter)}
                 aria-pressed={on}
-                className={`rounded-pill border px-5 py-2.5 text-base transition-colors duration-300 ${
+                className="rounded-pill border px-5 py-2.5 text-base"
+                initial={false}
+                animate={
                   on
-                    ? "border-fg bg-fg text-bg"
-                    : "border-line text-fg hover:border-fg"
-                }`}
+                    ? { borderColor: color.fg, backgroundColor: color.fg, color: color.bg }
+                    : { borderColor: color.line, backgroundColor: color.clear, color: color.fg }
+                }
+                whileHover={on ? undefined : { borderColor: color.fg }}
+                transition={tw(300)}
               >
                 {filter}
-              </button>
+              </motion.button>
             );
           })}
         </div>

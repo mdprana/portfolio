@@ -1,8 +1,9 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { motion } from "motion/react";
+import { quint } from "@/lib/motion";
 
-/** Adds `in` when the element scrolls into view (Figma Timeline/tile reveal). */
+/** Fades up while in view, hides again on exit (Figma Timeline/tile reveal). */
 export default function Reveal({
   children,
   className = "",
@@ -12,25 +13,19 @@ export default function Reveal({
   className?: string;
   delay?: number;
 }) {
-  const ref = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        el.style.transitionDelay = entry.isIntersecting ? `${delay}ms` : "0ms";
-        el.classList.toggle("in", entry.isIntersecting);
-      },
-      { rootMargin: "0px 0px -15% 0px" },
-    );
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, [delay]);
-
   return (
-    <div ref={ref} className={`reveal ${className}`}>
+    <motion.div
+      data-reveal
+      className={className}
+      initial="hidden"
+      whileInView="shown"
+      viewport={{ margin: "0px 0px -15% 0px" }}
+      variants={{
+        hidden: { opacity: 0, y: 28, transition: { duration: 0.8, ease: quint } },
+        shown: { opacity: 1, y: 0, transition: { duration: 0.8, ease: quint, delay: delay / 1000 } },
+      }}
+    >
       {children}
-    </div>
+    </motion.div>
   );
 }

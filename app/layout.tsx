@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
+import { MotionProvider } from "@/components/motion";
 import SiteMotion from "@/components/site-motion";
 
 // Figma asks for Inter Display; Inter is the closest available web family.
@@ -36,7 +37,12 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en" className={inter.variable}>
-      <body className="font-[family-name:var(--font-inter)]">{children}<SiteMotion /></body>
+      <body className="font-[family-name:var(--font-inter)]">
+        <MotionProvider>
+          {children}
+          <SiteMotion />
+        </MotionProvider>
+      </body>
     </html>
   );
 }

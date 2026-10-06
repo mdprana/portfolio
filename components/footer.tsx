@@ -1,13 +1,15 @@
 "use client";
 
-import Link from "next/link";
+import { motion } from "motion/react";
 
 import FitText from "@/components/fit-text";
 import {
   ArrowUp,
   Download,
 } from "@/components/icons";
+import { MotionLink } from "@/components/motion";
 import { footerColumns, profile } from "@/lib/content";
+import { color, hoverRoot, textMuted, tw } from "@/lib/motion";
 
 export function Pill({
   label,
@@ -18,31 +20,37 @@ export function Pill({
   href: string;
   tone?: "light" | "dark";
 }) {
-  const styles =
-    tone === "light"
-      ? "bg-fg text-bg hover:bg-muted"
-      : "bg-surface text-fg hover:bg-surface-2";
+  const [rest, hover] =
+    tone === "light" ? [color.fg, color.muted] : [color.surface, color.surface2];
   return (
-    <Link
+    <MotionLink
       href={href}
-      className={`inline-flex h-[51px] items-center rounded-pill px-7 text-base font-medium transition-colors duration-300 ${styles}`}
+      className={`inline-flex h-[51px] items-center rounded-pill px-7 text-base font-medium ${
+        tone === "light" ? "text-bg" : "text-fg"
+      }`}
+      initial={{ backgroundColor: rest }}
+      whileHover={{ backgroundColor: hover }}
+      transition={tw(300)}
     >
       {label}
-    </Link>
+    </MotionLink>
   );
 }
 
 export function ResumeButton() {
   return (
-    <a
+    <motion.a
       href={profile.resumeUrl}
       target="_blank"
       rel="noopener noreferrer"
-      className="inline-flex h-[53px] items-center gap-3 rounded-pill border border-fg px-7 text-base font-medium text-fg transition-colors duration-250 hover:bg-fg hover:text-bg"
+      className="inline-flex h-[53px] items-center gap-3 rounded-pill border border-fg px-7 text-base font-medium"
+      initial={{ backgroundColor: color.clear, color: color.fg }}
+      whileHover={{ backgroundColor: color.fg, color: color.bg }}
+      transition={tw(250)}
     >
       <Download />
       Download Resume
-    </a>
+    </motion.a>
   );
 }
 
@@ -74,13 +82,9 @@ export default function Footer() {
               <p className="text-muted">{column.label}</p>
               {column.links.map((link) =>
                 link.href ? (
-                  <Link
-                    key={link.text}
-                    href={link.href}
-                    className="transition-colors duration-250 hover:text-muted"
-                  >
+                  <MotionLink key={link.text} href={link.href} {...hoverRoot} variants={textMuted} transition={tw(250)}>
                     {link.text}
-                  </Link>
+                  </MotionLink>
                 ) : (
                   <span key={link.text}>{link.text}</span>
                 ),
@@ -88,13 +92,16 @@ export default function Footer() {
             </div>
           ))}
 
-          <Link
+          <MotionLink
             href="#top"
-            className="group inline-flex items-start gap-2 self-start text-base transition-colors duration-250 hover:text-muted"
+            className="inline-flex items-start gap-2 self-start text-base"
+            {...hoverRoot}
+            variants={textMuted}
+            transition={tw(250)}
           >
             Back to Top
             <ArrowUp />
-          </Link>
+          </MotionLink>
         </div>
       </div>
 

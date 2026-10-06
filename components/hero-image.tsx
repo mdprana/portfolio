@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
+import { motion, useReducedMotion, useScroll, useTransform } from "motion/react";
 
 /**
  * Hero Image (Figma 14:15) is annotated "scroll scale 1.25 → 1.0": the cover
@@ -8,41 +9,17 @@ import { useEffect, useRef } from "react";
  */
 export default function HeroImage() {
   const ref = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-
-    let frame = 0;
-    const update = () => {
-      frame = 0;
-      const box = el.getBoundingClientRect();
-      // 0 while the frame is still entering, 1 once it is fully in view.
-      const progress = Math.min(1, Math.max(0, (window.innerHeight - box.top) / box.height));
-      const scale = 1.25 - 0.25 * progress;
-      el.style.transform = `scale(${scale.toFixed(4)})`;
-    };
-    const onScroll = () => {
-      if (!frame) frame = requestAnimationFrame(update);
-    };
-
-    update();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("resize", onScroll);
-    return () => {
-      window.removeEventListener("scroll", onScroll);
-      window.removeEventListener("resize", onScroll);
-      if (frame) cancelAnimationFrame(frame);
-    };
-  }, []);
+  // 0 while the frame is still entering, 1 once it is fully in view.
+  const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "end end"] });
+  const scale = useTransform(scrollYProgress, [0, 1], [1.25, 1]);
+  const reduce = useReducedMotion();
 
   return (
-    <div className="aspect-[1392/786] w-full overflow-hidden bg-surface">
+    <div ref={ref} className="aspect-[1392/786] w-full overflow-hidden bg-surface">
       {/* Source photo from the Figma Hero Image fill. */}
-      <div
-        ref={ref}
+      <motion.div
         className="size-full bg-[url(/hero.png)] bg-cover bg-center will-change-transform"
+        style={{ scale: reduce ? 1 : scale }}
       />
     </div>
   );

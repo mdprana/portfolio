@@ -1,11 +1,13 @@
 import type { Metadata } from "next";
-import Link from "next/link";
+import * as motion from "motion/react-client";
 import FitText from "@/components/fit-text";
 import Footer from "@/components/footer";
 import Nav from "@/components/nav";
+import { MotionLink } from "@/components/motion";
 import Reveal from "@/components/reveal";
 import { ArrowSub } from "@/components/icons";
 import { capabilities, profile, timeline } from "@/lib/content";
+import { hoverRoot, rowBorder, rowGap, textMuted, tw } from "@/lib/motion";
 
 export const metadata: Metadata = { title: "About" };
 
@@ -66,25 +68,29 @@ export default function AboutPage() {
 
           <ul className="w-full max-w-[750px]">
             {capabilities.map((item) => (
-              <li
+              <motion.li
                 key={item.label}
-                className="group flex flex-col justify-between border-b border-line transition-colors duration-300 hover:border-fg"
+                className="flex flex-col justify-between border-b border-line"
+                {...hoverRoot}
+                variants={rowBorder}
+                transition={tw(300)}
               >
-                <span className="flex items-center gap-6 py-7 text-4xl font-bold tracking-[-0.04em] transition-all duration-300 group-hover:gap-9">
+                <motion.span
+                  className="flex items-center py-7 text-4xl font-bold tracking-[-0.04em]"
+                  variants={rowGap}
+                  transition={tw(300)}
+                >
                   <ArrowSub className={item.dim ? "text-dim" : "text-fg"} />
                   <span className={item.dim ? "text-dim" : "text-fg"}>
                     {item.label}
                   </span>
-                </span>
-              </li>
+                </motion.span>
+              </motion.li>
             ))}
             <li className="pt-12">
-              <Link
-                href="/contact"
-                className="text-2xl transition-colors duration-250 hover:text-muted"
-              >
+              <MotionLink href="/contact" className="text-2xl" {...hoverRoot} variants={textMuted} transition={tw(250)}>
                 Read more
-              </Link>
+              </MotionLink>
             </li>
           </ul>
         </section>

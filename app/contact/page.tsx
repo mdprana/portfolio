@@ -2,9 +2,11 @@ import type { Metadata } from "next";
 import Nav from "@/components/nav";
 import Footer from "@/components/footer";
 import FitText from "@/components/fit-text";
+import * as motion from "motion/react-client";
 import Reveal from "@/components/reveal";
 import { ArrowRight } from "@/components/icons";
 import { footerColumns, profile } from "@/lib/content";
+import { hoverRoot, textMuted, tw } from "@/lib/motion";
 
 export const metadata: Metadata = { title: "Contact" };
 
@@ -39,15 +41,24 @@ export default function ContactPage() {
             <ul className="mt-6 w-full max-w-[980px] md:ml-auto">
               {rows.map((row) => (
                 <li key={row.label} className="border-b border-line">
-                  <a
+                  <motion.a
                     href={row.href}
-                    className="group flex items-center justify-between gap-6 py-7 transition-colors duration-300 hover:text-muted"
+                    className="flex items-center justify-between gap-6 py-7"
+                    {...hoverRoot}
+                    variants={textMuted}
+                    transition={tw(300)}
                   >
                     <span className="text-[clamp(32px,4.5vw,56px)] font-bold leading-none tracking-[-0.04em]">
                       {row.label}
                     </span>
-                    <ArrowRight size={40} className="shrink-0 transition-transform duration-300 group-hover:translate-x-2" />
-                  </a>
+                    <motion.span
+                      className="shrink-0"
+                      variants={{ rest: { x: 0 }, hover: { x: 8 } }}
+                      transition={tw(300)}
+                    >
+                      <ArrowRight size={40} className="block" />
+                    </motion.span>
+                  </motion.a>
                 </li>
               ))}
             </ul>

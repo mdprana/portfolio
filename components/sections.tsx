@@ -1,6 +1,8 @@
-import Link from "next/link";
+import * as motion from "motion/react-client";
 import FitText from "@/components/fit-text";
 import HeroImage from "@/components/hero-image";
+import Marquee from "@/components/marquee";
+import { MotionLink } from "@/components/motion";
 import Reveal from "@/components/reveal";
 import WorkCard from "@/components/work-card";
 import { ArrowRight, ArrowSub } from "@/components/icons";
@@ -12,6 +14,10 @@ import {
   stats,
   tools,
 } from "@/lib/content";
+import { color, hoverRoot, rowBorder, rowGap, textMuted, tw } from "@/lib/motion";
+
+const t300 = tw(300);
+const tileText = { rest: { color: color.subtle }, hover: { color: color.black } };
 
 /* Hero (Figma 14:15) — pad 0/24/8/24, gap 24. */
 export function Hero() {
@@ -40,13 +46,17 @@ export function FeaturedProjects() {
           <WorkCard key={project.slug} project={project} />
         ))}
       </div>
-      <Link
+      <MotionLink
         href="/projects"
-        className="group mt-14 inline-flex items-center gap-4 text-4xl font-bold tracking-[-0.04em] transition-colors duration-300 hover:gap-6 active:text-muted"
+        className="mt-14 inline-flex items-center gap-4 text-4xl font-bold tracking-[-0.04em]"
+        initial={{ gap: 16, color: color.fg }}
+        whileHover={{ gap: 24 }}
+        whileTap={{ color: color.muted }}
+        transition={{ ...t300, gap: { duration: 0 } }}
       >
         <ArrowRight size={32} />
         View all projects
-      </Link>
+      </MotionLink>
     </section>
   );
 }
@@ -83,11 +93,14 @@ export function Capabilities() {
 
       <ul className="w-full max-w-[750px]">
         {capabilities.map((item) => (
-          <li
+          <motion.li
             key={item.label}
-            className="group border-b border-line transition-colors duration-300 hover:border-fg"
+            className="border-b border-line"
+            {...hoverRoot}
+            variants={rowBorder}
+            transition={t300}
           >
-            <span className="flex h-[100px] items-center gap-6 px-0 transition-all duration-300 group-hover:gap-9">
+            <motion.span className="flex h-[100px] items-center px-0" variants={rowGap} transition={t300}>
               <ArrowSub className={item.dim ? "text-dim" : "text-fg"} />
               <span
                 className={`text-4xl font-bold tracking-[-0.04em] ${
@@ -96,16 +109,13 @@ export function Capabilities() {
               >
                 {item.label}
               </span>
-            </span>
-          </li>
+            </motion.span>
+          </motion.li>
         ))}
         <li className="pt-12">
-          <Link
-            href="/about"
-            className="text-2xl transition-colors duration-250 hover:text-muted"
-          >
+          <MotionLink href="/about" className="text-2xl" {...hoverRoot} variants={textMuted} transition={tw(250)}>
             Read more
-          </Link>
+          </MotionLink>
         </li>
       </ul>
     </section>
@@ -132,8 +142,7 @@ export function TechStack() {
         </p>
       </div>
 
-      <div className="marquee overflow-hidden py-5" aria-hidden>
-        <div className="marquee-track items-center gap-10">
+      <Marquee>
           {track.map((tool, i) => (
             <div key={`${tool.name}-${i}`} className="flex items-center gap-10">
               <div className="flex items-center gap-3.5">
@@ -146,36 +155,53 @@ export function TechStack() {
               <span className="text-xl text-subtle">✳</span>
             </div>
           ))}
-        </div>
-      </div>
+      </Marquee>
 
       <ul className="frame grid grid-cols-2 md:grid-cols-6">
         {tools.map((tool) => (
-          <li
+          <motion.li
             key={tool.name}
-            className="group relative flex h-[232px] w-full flex-col justify-between border border-line bg-bg p-4 transition-colors duration-300 hover:border-fg hover:bg-fg"
+            className="relative flex h-[232px] w-full flex-col justify-between border border-line bg-bg p-4"
+            {...hoverRoot}
+            variants={{
+              rest: { borderColor: color.line, backgroundColor: color.bg },
+              hover: { borderColor: color.fg, backgroundColor: color.fg },
+            }}
+            transition={t300}
           >
-            <div className="flex justify-between text-[13px] text-subtle transition-colors duration-300 group-hover:text-black">
+            <motion.div className="flex justify-between text-[13px] text-subtle" variants={tileText} transition={t300}>
               <span>{tool.category}</span>
               <span>{tool.index}</span>
-            </div>
+            </motion.div>
             <div className="flex items-end justify-between">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
+              <motion.img
                 src={tool.logo}
                 alt=""
                 width={56}
                 height={56}
-                className="transition-all duration-300 group-hover:size-[72px] group-hover:brightness-0"
+                variants={{
+                  rest: { width: 56, height: 56, filter: "brightness(1)" },
+                  hover: { width: 72, height: 72, filter: "brightness(0)" },
+                }}
+                transition={t300}
               />
-              <span className="text-[20px] font-bold tracking-[-0.03em] transition-colors duration-300 group-hover:text-black">
+              <motion.span
+                className="text-[20px] font-bold tracking-[-0.03em]"
+                variants={{ rest: { color: color.fg }, hover: { color: color.black } }}
+                transition={t300}
+              >
                 {tool.name}
-              </span>
+              </motion.span>
             </div>
-            <span className="absolute bottom-4 left-4 text-[13px] text-subtle opacity-0 transition-opacity duration-300 group-hover:opacity-100 group-hover:text-black">
+            {/* Original only transitioned opacity; the colour snapped. */}
+            <motion.span
+              className="absolute bottom-4 left-4 text-[13px] text-subtle opacity-0"
+              variants={{ rest: { opacity: 0, color: color.subtle }, hover: { opacity: 1, color: color.black } }}
+              transition={{ ...t300, color: { duration: 0 } }}
+            >
               {tool.years}
-            </span>
-          </li>
+            </motion.span>
+          </motion.li>
         ))}
       </ul>
 
@@ -207,9 +233,12 @@ export function Highlights() {
       <div className="flex flex-col pt-10">
         <span className="label mb-5">(Awards &amp; Certifications)</span>
         {awards.map((award) => (
-          <div
+          <motion.div
             key={award.title}
-            className="flex flex-col gap-2 border-b border-line py-7 transition-colors duration-300 hover:border-fg md:flex-row md:items-center md:gap-6"
+            className="flex flex-col gap-2 border-b border-line py-7 md:flex-row md:items-center md:gap-6"
+            {...hoverRoot}
+            variants={rowBorder}
+            transition={t300}
           >
             <ArrowSub size={24} className="shrink-0 text-fg" />
             <span className="flex-1 text-4xl font-bold tracking-[-0.04em]">
@@ -217,7 +246,7 @@ export function Highlights() {
             </span>
             <span className="text-base text-muted md:w-[200px]">{award.org}</span>
             <span className="text-base text-muted">{award.year}</span>
-          </div>
+          </motion.div>
         ))}
       </div>
     </section>

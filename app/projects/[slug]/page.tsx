@@ -1,11 +1,13 @@
 import type { Metadata } from "next";
-import Link from "next/link";
+import * as motion from "motion/react-client";
 import { notFound } from "next/navigation";
 import FitText from "@/components/fit-text";
 import Footer from "@/components/footer";
 import Nav from "@/components/nav";
+import { MotionLink } from "@/components/motion";
 import Reveal from "@/components/reveal";
 import { nextProject, projectBySlug, projects } from "@/lib/content";
+import { hoverRoot, textMuted, tw } from "@/lib/motion";
 
 export function generateStaticParams() {
   return projects.map((project) => ({ slug: project.slug }));
@@ -120,10 +122,12 @@ export default async function ProjectPage({
         </section>
 
         <Reveal>
-          <Link href={`/projects/${next.slug}`} className="group frame block pb-10">
+          <MotionLink href={`/projects/${next.slug}`} className="frame block pb-10" {...hoverRoot}>
             <span className="label">(Next project)</span>
-            <FitText text={`${next.title} →`} as="p" className="mt-4 transition-colors duration-300 group-hover:text-muted" />
-          </Link>
+            <motion.div variants={textMuted} transition={tw(300)}>
+              <FitText text={`${next.title} →`} as="p" className="mt-4" />
+            </motion.div>
+          </MotionLink>
         </Reveal>
       </main>
       <Footer />
