@@ -1,7 +1,10 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect } from "react";
 import { usePathname } from "next/navigation";
+import { animate, motion, useMotionValue, useSpring } from "motion/react";
+
+const spring = { stiffness: 500, damping: 60, mass: 1 };
 
 /**
  * Site-wide motion: inversion cursor, inertial scroll, scroll reveals.
@@ -10,12 +13,16 @@ import { usePathname } from "next/navigation";
  * `html.motion-ready`.
  */
 export default function SiteMotion() {
-  const cursor = useRef<HTMLDivElement>(null);
   const pathname = usePathname();
+  const opacity = useMotionValue(0);
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
+  const x = useSpring(mouseX, spring);
+  const y = useSpring(mouseY, spring);
+  const size = useSpring(28, spring);
 
   useEffect(() => {
     const root = document.documentElement;
-    const el = cursor.current;
     const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
     const fine = matchMedia("(hover: hover) and (pointer: fine)").matches;
     let frame = 0;
@@ -51,44 +58,29 @@ export default function SiteMotion() {
     }
 
     root.classList.add("custom-cursor");
-    let x = 0, y = 0, px = 0, py = 0, angle = 0, hover = false, active = false;
+    let visible = false;
     let target = scrollY, scrolling = false, last = 0;
 
+    const fade = (to: number) => animate(opacity, to, { type: "tween", duration: 0.2 });
     const move = (event: PointerEvent) => {
-      x = event.clientX;
-      y = event.clientY;
-      if (!active) { px = x; py = y; }
-      active = true;
-      hover = !!(event.target as Element | null)?.closest("a,button");
-      if (el) el.style.opacity = "1";
-      start();
+      mouseX.set(event.clientX);
+      mouseY.set(event.clientY);
+      if (!visible) { x.jump(event.clientX); y.jump(event.clientY); visible = true; fade(1); }
     };
-    const leave = () => { active = false; if (el) el.style.opacity = "0"; };
+    const leave = () => { visible = false; fade(0); };
+    const press = () => size.set(16);
+    const release = () => size.set(28);
 
-    const animate = (now: number) => {
+    const tick = (now: number) => {
       const dt = Math.min(48, now - (last || now));
       last = now;
-      const ease = 1 - Math.exp(-dt / 90);
-      px += (x - px) * ease;
-      py += (y - py) * ease;
-      if (el) {
-        const speed = Math.min(0.25, Math.hypot(x - px, y - py) / 150);
-        // Idle hover spins slowly so the blob keeps changing over time.
-        const spin = hover ? now / 40 : 0;
-        angle += (Math.atan2(y - py, x - px) * 180 / Math.PI - angle) * ease;
-        const scale = hover ? 1.45 : 1;
-        el.style.transform =
-          `translate3d(${px}px,${py}px,0) rotate(${angle + spin}deg) scale(${scale * (1 + speed)},${scale * (1 - speed)})`;
-      }
-      if (scrolling) {
-        const next = scrollY + (target - scrollY) * (1 - Math.exp(-dt / 150));
-        window.scrollTo({ top: Math.abs(target - next) < 1 ? target : next, behavior: "instant" });
-        if (Math.abs(target - scrollY) < 1) scrolling = false;
-      }
-      if (scrolling || (active && Math.hypot(x - px, y - py) > 0.1)) frame = requestAnimationFrame(animate);
+      const next = scrollY + (target - scrollY) * (1 - Math.exp(-dt / 150));
+      window.scrollTo({ top: Math.abs(target - next) < 1 ? target : next, behavior: "instant" });
+      if (Math.abs(target - scrollY) < 1) scrolling = false;
+      if (scrolling) frame = requestAnimationFrame(tick);
       else { frame = 0; last = 0; }
     };
-    function start() { if (!frame) frame = requestAnimationFrame(animate); }
+    function start() { if (!frame) frame = requestAnimationFrame(tick); }
 
     // Inertial wheel scroll. Bails out for zoom, keyboard, nested scrollers,
     // form fields and locked (menu-open) pages so nothing becomes unreachable.
@@ -109,10 +101,13 @@ export default function SiteMotion() {
       scrolling = true;
       start();
     };
-    const stop = () => { scrolling = false; target = scrollY; };
+    const stop = () => { scrolling = false; target = scrollY; cancelAnimationFrame(frame); frame = 0; last = 0; };
 
     window.addEventListener("pointermove", move, { passive: true });
     document.addEventListener("pointerleave", leave);
+    window.addEventListener("blur", leave);
+    window.addEventListener("pointerdown", press);
+    window.addEventListener("pointerup", release);
     window.addEventListener("wheel", wheel, { passive: false });
     window.addEventListener("keydown", stop);
     window.addEventListener("pointerdown", stop);
@@ -124,12 +119,22 @@ export default function SiteMotion() {
       root.classList.remove("custom-cursor", "motion-ready");
       window.removeEventListener("pointermove", move);
       document.removeEventListener("pointerleave", leave);
+      window.removeEventListener("blur", leave);
+      window.removeEventListener("pointerdown", press);
+      window.removeEventListener("pointerup", release);
       window.removeEventListener("wheel", wheel);
       window.removeEventListener("keydown", stop);
       window.removeEventListener("pointerdown", stop);
-      if (el) el.style.opacity = "0";
+      opacity.set(0);
+      size.jump(28);
     };
-  }, [pathname]);
+  }, [pathname, opacity, mouseX, mouseY, x, y, size]);
 
-  return <div ref={cursor} className="site-cursor" aria-hidden="true" />;
+  return (
+    <motion.div
+      className="site-cursor"
+      aria-hidden="true"
+      style={{ x, y, width: size, height: size, opacity }}
+    />
+  );
 }

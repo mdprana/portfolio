@@ -79,23 +79,25 @@ body {
 /* Fine-pointer cursor: white disc inverts whatever passes under it. */
 .site-cursor {
   position: fixed;
-  top: -28px;
-  left: -28px;
-  width: 56px;
-  height: 56px;
+  top: 0;
+  left: 0;
+  width: 28px;
+  height: 28px;
+  translate: -50% 0%;
   border-radius: 50%;
-  background: #ffffff;
+  background: #fff;
   mix-blend-mode: difference;
   pointer-events: none;
   z-index: 1000;
   opacity: 0;
   will-change: transform;
-  transition: opacity 150ms;
-  contain: strict;
 }
 @media (hover: hover) and (pointer: fine) {
   .custom-cursor,
   .custom-cursor * { cursor: none !important; }
+}
+@media (hover: none), (pointer: coarse) {
+  .site-cursor { display: none; }
 }
 
 /* Scroll reveal: fade up on enter (slow), fade out on exit (fast). */
